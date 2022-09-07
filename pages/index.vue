@@ -6,10 +6,11 @@
           {{ currentTrack?.name }}
         </p>
         <p>{{ currentTrack?.artist }}</p>
+      </div>
+      <DarkModeButton class="DarkModeButton" />
 
-        <div class="countDown">
-          {{ countDown }}
-        </div>
+      <div class="countDown">
+        {{ countDown }}
       </div>
       <div class="progress">
         <div @mousedown="onMouseDown" @touchstart="onTouchStart">
@@ -22,7 +23,7 @@
     </div>
     <div class="bottom-container">
       <div :class="[{ isFavorite: currentTrack?.favorited }]" @click="favorite">
-        <IconFavorite width="40" height="40" class="svg" />
+        <IconFavorite width="40" height="40" class="svg iconFav" />
       </div>
       <div class="backward-icon">
         <IconBackWard width="40" height="40" class="svg" @click="prevTrack" />
@@ -54,10 +55,12 @@ import IconPause from 'assets/icon-pause.svg'
 import IconBackWard from 'assets/icon-back-ward.svg'
 import IconForward from 'assets/icon-forward.svg'
 import IconFavorite from 'assets/icon-favorite.svg'
+import DarkModeButton from '~/components/DarkModeButton.vue'
 
 export default {
   name: 'PlayAudio',
   components: {
+    DarkModeButton,
     IconPlay,
     IconPause,
     IconBackWard,
@@ -82,63 +85,72 @@ export default {
           name: 'Mekanın Sahibi',
           artist: 'Norm Ender',
           source:
-            'https://github.com/shabnam-ght/music-player/blob/main/mp3/1.mp3',
+            'https://github.com/shabnam-ght/music-player/blob/main/mp3/1.mp3?raw=true',
+          url: 'https://www.youtube.com/watch?v=z3wAjJXbYzA',
           favorited: false,
         },
         {
           name: 'Everybody Knows',
           artist: 'Leonard Cohen',
           source:
-            'https://github.com/shabnam-ght/music-player/blob/main/mp3/2.mp3',
+            'https://raw.githubusercontent.com/shabnam-ght/music-player/main/mp3/2.mp3',
+          url: 'https://www.youtube.com/watch?v=Lin-a2lTelg',
           favorited: true,
         },
         {
           name: 'Extreme Ways',
           artist: 'Moby',
           source:
-            'https://github.com/shabnam-ght/music-player/blob/main/mp3/3.mp3',
+            'https://raw.githubusercontent.com/shabnam-ght/music-player/main/mp3/3.mp3',
+          url: 'https://www.youtube.com/watch?v=ICjyAe9S54c',
           favorited: false,
         },
         {
           name: 'Butterflies',
           artist: 'Sia',
           source:
-            'https://github.com/shabnam-ght/music-player/blob/main/mp3/4.mp3',
+            'https://raw.githubusercontent.com/shabnam-ght/music-player/main/mp3/4.mp3',
+          url: 'https://www.youtube.com/watch?v=kYgGwWYOd9Y',
           favorited: false,
         },
         {
           name: 'The Final Victory',
           artist: 'Haggard',
           source:
-            'https://github.com/shabnam-ght/music-player/blob/main/mp3/5.mp3',
+            'https://raw.githubusercontent.com/shabnam-ght/music-player/main/mp3/5.mp3',
+          url: 'https://www.youtube.com/watch?v=0WlpALnQdN8',
           favorited: true,
         },
         {
           name: 'Genius ft. Sia, Diplo, Labrinth',
           artist: 'LSD',
           source:
-            'https://github.com/shabnam-ght/music-player/blob/main/mp3/6.mp3',
+            'https://raw.githubusercontent.com/shabnam-ght/music-player/main/mp3/6.mp3',
+          url: 'https://www.youtube.com/watch?v=HhoATZ1Imtw',
           favorited: false,
         },
         {
           name: 'The Comeback Kid',
           artist: 'Lindi Ortega',
           source:
-            'https://github.com/shabnam-ght/music-player/blob/main/mp3/7.mp3',
+            'https://raw.githubusercontent.com/shabnam-ght/music-player/main/mp3/7.mp3',
+          url: 'https://www.youtube.com/watch?v=me6aoX0wCV8',
           favorited: true,
         },
         {
           name: 'Overdose',
           artist: 'Grandson',
           source:
-            'https://github.com/shabnam-ght/music-player/blob/main/mp3/8.mp3',
+            'https://raw.githubusercontent.com/shabnam-ght/music-player/main/mp3/8.mp3',
+          url: 'https://www.youtube.com/watch?v=00-Rl3Jlx-o',
           favorited: false,
         },
         {
           name: "Rag'n'Bone Man",
           artist: 'Human',
           source:
-            'https://github.com/shabnam-ght/music-player/blob/main/mp3/9.mp3',
+            'https://raw.githubusercontent.com/shabnam-ght/music-player/main/mp3/9.mp3',
+          url: 'https://www.youtube.com/watch?v=L3wKzyIN1yk',
           favorited: false,
         },
       ],
@@ -167,10 +179,10 @@ export default {
       this.audio.ontimeupdate = () => {
         this.generateTime()
       }
-      this.audio.onloadedmetadata = function () {
+      this.audio.onloadedmetadata = () => {
         this.generateTime()
       }
-      this.audio.onended = function () {
+      this.audio.onended = () => {
         this.isTimerPlaying = true
       }
     })
@@ -202,24 +214,30 @@ export default {
     },
 
     generateTime() {
-      const width = (100 / this.audio.duration) * this.audio.currentTime
-      this.barWidth = width + '%'
-      const durmin = Math.floor(this.audio.duration / 60)
-      const dursec = Math.floor(this.audio.duration - durmin * 60)
-      const curmin = Math.floor(this.audio.currentTime / 60)
-      const cursec = Math.floor(this.audio.currentTime - curmin * 60)
-      let countDownMin = durmin - curmin
-      let countDownSec = dursec - cursec
+      if (!isNaN(this.audio.duration)) {
+        const width = (100 / this.audio.duration) * this.audio.currentTime
+        this.barWidth = width + '%'
+        const durmin = Math.floor(this.audio.duration / 60)
+        const dursec = Math.floor(this.audio.duration - durmin * 60)
+        const curmin = Math.floor(this.audio.currentTime / 60)
+        const cursec = Math.floor(this.audio.currentTime - curmin * 60)
 
-      if (countDownMin < 10) {
-        countDownMin = '0' + countDownMin
+        let countDownMin = Math.floor(
+          (this.audio.duration - this.audio.currentTime) / 60
+        )
+        let countDownSec = Math.floor(
+          this.audio.duration - this.audio.currentTime - countDownMin * 60
+        )
+        if (countDownMin < 10) {
+          countDownMin = '0' + countDownMin
+        }
+        if (countDownSec < 10) {
+          countDownSec = '0' + countDownSec
+        }
+        this.duration = durmin + ':' + dursec
+        this.currentTime = curmin + ':' + cursec
+        this.countDown = countDownMin + ':' + countDownSec
       }
-      if (countDownSec < 10) {
-        countDownSec = '0' + countDownSec
-      }
-      this.duration = durmin + ':' + dursec
-      this.currentTime = curmin + ':' + cursec
-      this.countDown = countDownMin + ':' + countDownSec
     },
     updateBar(x) {
       const { progress } = this.$refs
@@ -240,8 +258,6 @@ export default {
     },
 
     prevTrack() {
-      this.transitionName = 'scale-in'
-      this.isShowCover = false
       if (this.currentTrackIndex > 0) {
         this.currentTrackIndex--
       } else {
@@ -251,8 +267,6 @@ export default {
       this.resetPlayer()
     },
     nextTrack() {
-      this.transitionName = 'scale-out'
-      this.isShowCover = false
       if (this.currentTrackIndex < this.tracks.length - 1) {
         this.currentTrackIndex++
       } else {
@@ -263,7 +277,6 @@ export default {
     },
     resetPlayer() {
       this.barWidth = 0
-      this.circleLeft = 0
       this.audio.currentTime = 0
       this.audio.src = this.currentTrack.source
       setTimeout(() => {
@@ -349,7 +362,7 @@ export default {
 
 <style>
 body {
-  background: #dfe7ef;
+  background: var(--background-color-secondary);
   font-family: 'Bitter', serif;
 }
 
@@ -364,7 +377,6 @@ body {
   margin-top: 20%;
   margin-left: 30%;
   font-size: 30px;
-  color: #02404b;
 }
 
 .progress-bar {
@@ -392,19 +404,24 @@ body {
   margin-top: -20px;
   margin-right: -10px;
   margin-left: -10px;
-  background-color: #ebf6ff;
+  background-color: var(--background-color-primary);
 }
 .top-container {
-  background-color: #ebf6ff;
+  background-color: var(--background-color-primary);
   box-shadow: 0px 15px 35px -5px rgba(0, 42, 54, 0.32);
   border-radius: 15px;
   padding: 20px 100px 40px 100px;
 }
-
+.text-wrapper {
+  color: var(--text-primary-color);
+}
 .countDown {
-  font-size: 20px;
-  margin-left: 375px;
-  margin-bottom: -12px;
+  font-size: 15px;
+  display: inline-block;
+  position: relative;
+  left: 105%;
+  color: var(--countdown-color);
+  top: 15px;
 }
 .backward-icon {
   color: #0088a0cd;
@@ -414,7 +431,11 @@ body {
 }
 
 .svg:hover path {
-  filter: drop-shadow(0 0 3px rgba(2, 81, 105, 0.575));
+  filter: drop-shadow(0 0 2.5px rgba(2, 81, 105, 0.575));
+}
+.iconFav {
+  position: relative;
+  right: 200px;
 }
 .forward-icon {
   color: #0088a0cd;
@@ -426,11 +447,32 @@ body {
 .needle {
   width: 10px;
   height: 10px;
-  background-color: #02404b;
+  background-color: var(--text-primary-color);
   border-radius: 50px;
   margin-top: -4px;
 }
 .isFavorite .svg {
   color: red;
+}
+.DarkModeButton {
+  position: relative;
+  left: 300px;
+  bottom: 85px;
+}
+
+:root {
+  --background-color-primary: #ebf6ff;
+  --background-color-secondary: #dfe7ef;
+  --countdown-color: #9c9c9c;
+  --text-primary-color: #02404b;
+  --element-size: 4rem;
+}
+
+/* Define styles for the root window with dark - mode preference */
+:root.dark-theme {
+  --background-color-primary: #1e1e1e;
+  --background-color-secondary: #2d2d30;
+  --countdown-color: #c1c1c1;
+  --text-primary-color: #0088a0cd;
 }
 </style>

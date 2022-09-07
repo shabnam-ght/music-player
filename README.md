@@ -1,4 +1,4 @@
-# AccordionTest
+# MusicPlayer
 
 ## Build Setup
 
