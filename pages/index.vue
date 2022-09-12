@@ -22,28 +22,33 @@
       </div>
     </div>
     <div class="bottom-container">
-      <div :class="[{ isFavorite: currentTrack?.favorited }]" @click="favorite">
-        <IconFavorite width="40" height="40" class="svg iconFav" />
-      </div>
-      <div class="backward-icon">
-        <IconBackWard width="40" height="40" class="svg" @click="prevTrack" />
-      </div>
-      <div class="play-pause-icon" @click="play">
-        <IconPause
-          v-if="isTimerPlaying"
-          width="40"
-          height="40"
-          class="c-play-audio__icon-pause-audio svg"
-        />
-        <IconPlay
-          v-else
-          width="40"
-          height="40"
-          class="c-play-audio__icon-play-audio svg"
-        />
-      </div>
-      <div class="forward-icon">
-        <IconForward width="40" height="40" class="svg" @click="nextTrack" />
+      <div class="svg-wrapper">
+        <div
+          :class="[{ isFavorite: currentTrack?.favorited }]"
+          @click="favorite"
+        >
+          <IconFavorite width="40" height="40" class="svg iconFav" />
+        </div>
+        <div class="backward-icon">
+          <IconBackWard width="40" height="40" class="svg" @click="prevTrack" />
+        </div>
+        <div class="play-pause-icon" @click="play">
+          <IconPause
+            v-if="isTimerPlaying"
+            width="40"
+            height="40"
+            class="c-play-audio__icon-pause-audio svg"
+          />
+          <IconPlay
+            v-else
+            width="40"
+            height="40"
+            class="c-play-audio__icon-play-audio svg"
+          />
+        </div>
+        <div class="forward-icon">
+          <IconForward width="40" height="40" class="svg" @click="nextTrack" />
+        </div>
       </div>
     </div>
   </div>
@@ -370,12 +375,11 @@ body {
   box-sizing: border-box;
 }
 .wrapper {
-  width: 30%;
+  width: 700px;
   display: block;
   align-items: center;
   justify-content: center;
-  margin-top: 20%;
-  margin-left: 30%;
+  margin: 15% auto;
   font-size: 30px;
 }
 
@@ -397,10 +401,9 @@ body {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-
   box-shadow: 0px 15px 35px -5px rgba(0, 69, 88, 0.32);
   border-radius: 15px;
-  padding: 20px 120px 20px 120px;
+  padding: 20px 160px 20px 120px;
   margin-top: -20px;
   margin-right: -10px;
   margin-left: -10px;
@@ -435,7 +438,7 @@ body {
 }
 .iconFav {
   position: relative;
-  right: 200px;
+  right: 350px;
 }
 .forward-icon {
   color: #0088a0cd;
@@ -444,6 +447,13 @@ body {
   margin: 10px;
   color: #0088a0cd;
 }
+.svg-wrapper {
+  position: relative;
+  left: 100px;
+  display: flex;
+  align-items: center;
+}
+
 .needle {
   width: 10px;
   height: 10px;
@@ -456,7 +466,7 @@ body {
 }
 .DarkModeButton {
   position: relative;
-  left: 300px;
+  left: 500px;
   bottom: 85px;
 }
 
@@ -468,11 +478,58 @@ body {
   --element-size: 4rem;
 }
 
-/* Define styles for the root window with dark - mode preference */
 :root.dark-theme {
   --background-color-primary: #1e1e1e;
   --background-color-secondary: #2d2d30;
   --countdown-color: #c1c1c1;
   --text-primary-color: #0088a0cd;
+}
+@media screen and (max-width: 1024px) {
+  .wrapper {
+    margin: 40% auto;
+  }
+
+  .svg-wrapper {
+    position: relative;
+    display: contents;
+    align-items: center;
+    justify-content: center;
+  }
+}
+@media screen and (max-width: 768px) {
+  .wrapper {
+    width: 250px;
+    align-items: center;
+    justify-content: left;
+  }
+  .text-wrapper {
+    font-size: 20px;
+    position: relative;
+    right: 65px;
+  }
+
+  .svg {
+    margin: 2px;
+    padding: 2px;
+  }
+  .svg-wrapper {
+    position: relative;
+    left: 100px;
+    display: flex;
+    align-items: center;
+  }
+  .iconFav {
+    position: relative;
+    right: 10px;
+  }
+  .DarkModeButton {
+    position: relative;
+    left: 25px;
+    bottom: 130px;
+  }
+  .text-wrapper {
+    position: relative;
+    top: 20px;
+  }
 }
 </style>
